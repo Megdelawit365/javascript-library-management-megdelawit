@@ -57,10 +57,7 @@ const searchMembers = (query) => {
         return
     }
 
-    console.log("============= Search Result =============")
-    for (const r of result) {
-        console.log(r)
-    }
+    return result
 }
 
 
