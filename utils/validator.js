@@ -1,7 +1,6 @@
 import { isEmpty } from "./helpers.js"
-import { books } from '../data/books.js'
 
-const validateBook = (book) => {
+const validateBook = (book, books) => {
     //check if there are empty fields
     for (const key in book) {
         if (isEmpty(book[key])) {
@@ -44,7 +43,7 @@ const validateBook = (book) => {
     //check if it already exists
 
     for (const b of books) {
-        if (b.isbn === book.isbn) {
+        if (b.isbn == book.isbn) {
             return {
                 valid: false,
                 error: `Book isbn already exists.`

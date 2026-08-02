@@ -1,11 +1,13 @@
-import { books } from '../data/books.js'
 
 const isEmpty = (data) => {
     return data == null || data == ""
 }
 
-const generateId = () => {
+const generateId = (books) => {
     const len = books.length
+    if (len == 0) {
+        return 1
+    }
     let id = 1
     // sort by id from lowest to highest
     books.sort((a, b) => a.id - b.id)
@@ -16,6 +18,10 @@ const generateId = () => {
             id = i
             break
         }
+    }
+
+    if (id == len) {
+        id = len + 1
     }
 
     return id
