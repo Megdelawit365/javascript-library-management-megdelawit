@@ -3,14 +3,14 @@ import { validateBook } from '../utils/validator.js'
 import { generateId } from '../utils/helpers.js'
 
 const addBook = (book) => {
-    const isValid = validateBook(book)
+    const isValid = validateBook(book, books)
 
     if (!isValid.valid) {
         console.log("============= Error =============")
         console.log(isValid.error)
         return
     }
-    book.id = generateId()
+    book.id = generateId(books)
     books.push(book)
 
     console.log("============= Book added successfully! =============")
@@ -18,4 +18,17 @@ const addBook = (book) => {
     return
 }
 
-export { addBook }
+const viewAllBooks = () => {
+    if (books.length == 0) {
+        console.log("No books found.")
+        return
+    }
+    console.log(`${books.length} books found:`)
+    console.log(" ")
+
+    for (const b of books) {
+        console.log(b)
+    }
+}
+
+export { addBook, viewAllBooks }
