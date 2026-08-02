@@ -1,4 +1,4 @@
-import { isEmpty } from "./helpers"
+import { isEmpty } from "./helpers.js"
 import { books } from '../data/books.js'
 
 const validateBook = (book) => {
@@ -56,3 +56,5 @@ const validateBook = (book) => {
     return { valid: true }
 
 }
+
+export { validateBook }
