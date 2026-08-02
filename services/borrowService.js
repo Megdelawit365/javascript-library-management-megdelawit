@@ -79,7 +79,8 @@ const returnBook = (memberId, bookId, books, members) => {
 
     books[bookIndex].availableCopies += 1
     members[memberIndex].borrowedBooks = members[member].borrowedBooks.filter(m => m !== bookId)
-    borrows = borrows.filter(b => b.memberId == memberId && b.bookId == bookId)
+    const borrowIndex = borrows.findIndex(b => b.memberId == memberId && b.bookId == bookId)
+    borrows[borrowIndex].returned = true
 
     return {
         success: true,
