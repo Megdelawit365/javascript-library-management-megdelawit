@@ -13,6 +13,9 @@ const addBook = (book) => {
     book.id = generateId()
     books.push(book)
 
-    console.log("Book added successfully!")
+    console.log("============= Book added successfully! =============")
+    console.log(book)
     return
 }
+
+export { addBook }
