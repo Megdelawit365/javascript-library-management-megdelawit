@@ -40,10 +40,11 @@ const validateBook = (book, books) => {
         }
     }
 
-    //check if it already exists
+    //check if book already exists
+    const bookId = book.id ? book.id : -1 // useful for checking both new books (no id yet) and existing (when updating)
 
     for (const b of books) {
-        if (b.isbn == book.isbn) {
+        if (b.isbn == book.isbn && bookId != b.id) {
             return {
                 valid: false,
                 error: `Book isbn already exists.`
