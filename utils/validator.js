@@ -57,4 +57,47 @@ const validateBook = (book, books) => {
 
 }
 
-export { validateBook }
+
+
+const validateMember = (member, members) => {
+    const fields = ["firstName", "lastName", "email", "phone", "borrowedBooks"]
+
+    for (const f of fields) {
+        // check if it contains all fields
+        if (!(f in member)) {
+            return {
+                valid: false,
+                error: `${f} is required.`
+            }
+        }
+
+        // check if all fields are non empty
+        if (isEmpty(member[f])) {
+            return {
+                valid: false,
+                error: `${f} cannot be empty.`
+            }
+        }
+    }
+
+    for (const m of members) {
+        if (m.email.toLowerCase() === member.email.toLowerCase()) {
+            return {
+                valid: false,
+                error: `Failed to add member. Email already exists.`
+            }
+        }
+        if (m.phone === member.phone) {
+            return {
+                valid: false,
+                error: `Failed to add member. Phone number already exists.`
+            }
+        }
+    }
+    return { valid: true }
+
+
+}
+
+
+export { validateBook, validateMember }
