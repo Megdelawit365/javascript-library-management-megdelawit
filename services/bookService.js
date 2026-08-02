@@ -74,10 +74,7 @@ const updateBook = (book) => {
                 return
             }
         }
-        if (books[i].isbn == book.isbn && books[i].id != book.id) {
-            console.log("Isbn already exists.")
-            return
-        }
+
     }
 
     if (existingBook == -1) {
@@ -95,9 +92,12 @@ const updateBook = (book) => {
 
 
     books[existingBook] = book
+
     console.log("Book editted successfully.")
+    console.log("Editted book:")
+    console.log(books[existingBook])
     return
 
 }
 
-export { addBook, viewAllBooks, searchBooks }
+export { addBook, viewAllBooks, searchBooks, updateBook }
