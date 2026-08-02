@@ -6,28 +6,26 @@ const addBook = (book) => {
     const isValid = validateBook(book, books)
 
     if (!isValid.valid) {
-        console.log("============= Error =============")
-        console.log(isValid.error)
-        return
+        return {
+            success: false,
+            error: isValid.error
+        }
     }
     book.id = generateId(books)
     books.push(book)
 
-    console.log("============= Book added successfully! =============")
-    console.log(book)
-    return
+    return {
+        success: true,
+        message: "Book successfully added.",
+        book: book
+    }
+
 }
 
 const viewAllBooks = () => {
-    if (books.length == 0) {
-        console.log("No books found.")
-        return
-    }
-    console.log(`${books.length} books found:`)
-    console.log(" ")
-
-    for (const b of books) {
-        console.log(b)
+    return {
+        totalBooks: books.length,
+        books: books
     }
 }
 
@@ -49,12 +47,11 @@ const searchBooks = (query) => {
         }
     }
 
-    if (result.length == 0) {
-        console.log("No books found.")
-        return
-    }
 
-    return result
+    return {
+        totalResults: result.length,
+        result: result
+    }
 }
 
 const updateBook = (book) => {
@@ -67,33 +64,61 @@ const updateBook = (book) => {
 
             // if field is isbn
             if (book["isbn"] != books[i].isbn) {
-                console.log("Isbn cannot be changed.")
-                return
+
+                return {
+                    success: false,
+                    error: "Isbn cannot be changed."
+                }
             }
         }
 
     }
 
     if (existingBook == -1) {
-        console.log("Book does not exist.")
-        return
+        return {
+            success: false,
+            error: "Book does not exist."
+        }
     }
 
     const isValid = validateBook(book, books)
 
     if (!isValid.valid) {
-        console.log("============= Error =============")
-        console.log(isValid.error)
-        return
+        return {
+            success: false,
+            error: isValid.error
+        }
     }
-
 
     books[existingBook] = book
 
-    console.log("Book editted successfully.")
-    console.log("Editted book:")
-    console.log(books[existingBook])
-    return
+    return {
+        success: true,
+        message: "Book successfully editted.",
+        book: books[existingBook]
+    }
+
+}
+
+const deleteBook = (bookId) => {
+    const book = books.find(b => b.id === bookId)
+    if (!book) {
+        return {
+            success: false,
+            error: "Book does not exist"
+        }
+    }
+    if (book.availableCopies != book.totalCopies) {
+        return {
+            success: false,
+            error: "Some copies have not been returned."
+        }
+    }
+    books = books.filter(b => b.id !== bookId);
+    return {
+        success: true,
+        message: "Book successfully removed."
+    }
 
 }
 
