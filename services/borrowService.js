@@ -1,57 +1,91 @@
 import { searchBooks } from "./bookService"
 import { searchMembers } from "./memberService"
+import { books } from '../data/books.js'
+import { members } from '../data/members.js'
+import { borrows } from "../data/borrows.js"
+import { generateId } from "../utils/helpers"
 
-const borrowBook = (memberId, bookId, books, members) => {
-    if (!searchMembers({ "id": memberId })) {
-        console.log("Member does not exist")
-        return
-    }
-    if (!searchBooks({ "id": bookId })) {
-        console.log("Member does not exist")
-        return
-    }
-    const member = findIndex(m => m.id = member.id)
-    const book = findIndex(b => b.id = book.id)
 
-    if (book.availableCopies == 0) {
-        console.log("Book is not available")
-        return
+const borrowBook = (memberId, bookId) => {
+    if (searchMembers({ "id": memberId }).totalResults === 0) {
+        return {
+            success: false,
+            error: "Member does not exist"
+        }
     }
-    if (book.isbn in member.borrowedBooks) {
-        console.log("Member has already borrowed book.")
-        return
+    if (searchBooks({ "id": bookId }).totalResults === 0) {
+        return {
+            success: false,
+            error: "Book does not exist"
+        }
+    }
+    const memberIndex = findIndex(m => m.id = member.id)
+    const bookIndex = findIndex(b => b.id = book.id)
+
+    if (books[bookIndex].availableCopies == 0) {
+        return {
+            success: false,
+            error: "Book is not available"
+        }
+    }
+    if (bookId in member.borrowedBooks) {
+        return {
+            success: false,
+            error: "Member has already borrowed this book."
+        }
+
     }
 
     books[book].availableCopies -= 1
     members[member].borrowedBooks.push(book.isbn)
+    borrows.push({
+        id: generateId(borrows),
+        memberId: memberId,
+        bookId: bookId,
+        borrowDate: new Date(now),
+        returned: false
+    })
 
-    console.log("Book borrowed successfully")
-    return
+    return {
+        success: true,
+        message: "Book borrowed successfully."
+    }
+
 
 }
 
 const returnBook = (memberId, bookId, books, members) => {
-    if (!searchMembers({ "id": memberId })) {
-        console.log("Member does not exist")
-        return
+    if (searchMembers({ "id": memberId }).totalResults === 0) {
+        return {
+            success: false,
+            error: "Member does not exist"
+        }
     }
-    if (!searchBooks({ "id": bookId })) {
-        console.log("Member does not exist")
-        return
+    if (searchBooks({ "id": bookId }).totalResults === 0) {
+        return {
+            success: false,
+            error: "Book does not exist"
+        }
     }
-    const member = findIndex(m => m.id = member.id)
-    const book = findIndex(b => b.id = book.id)
+    const memberIndex = findIndex(m => m.id = member.id)
+    const bookIndex = findIndex(b => b.id = book.id)
 
-    if (!(book.isbn in member.borrowedBooks)) {
-        console.log("Member has not borrowed book.")
-        return
+    if (!(bookId in member.borrowedBooks)) {
+        return {
+            success: false,
+            error: "Member has not borrowed book."
+        }
     }
 
-    books[book].availableCopies += 1
-    members[member].borrowedBooks = members[member].borrowedBooks.filter(m => m !== book.isbn)
+    books[bookIndex].availableCopies += 1
+    members[memberIndex].borrowedBooks = members[member].borrowedBooks.filter(m => m !== bookId)
+    borrows = borrows.filter(b => b.memberId == memberId && b.bookId == bookId)
 
-    console.log("Book returned successfully")
-    return
+    return {
+        success: true,
+        message: "Book returned successfully."
+    }
+
 }
 
 export { borrowBook, returnBook }
