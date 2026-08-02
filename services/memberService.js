@@ -7,29 +7,26 @@ const addMember = (member) => {
     const isValid = validateMember(member, members)
 
     if (!isValid.valid) {
-        console.log("============= Error =============")
-        console.log(isValid.error)
-        return
+        return {
+            success: false,
+            error: isValid.error
+        }
     }
 
     member.id = generateId(members)
     members.push(member)
 
-    console.log("============= Member added successfully! =============")
-    console.log(member)
-    return
+    return {
+        success: true,
+        message: "Member successfully added.",
+        member: member
+    }
 }
 
 const viewAllMembers = () => {
-    if (members.length == 0) {
-        console.log("No members found.")
-        return
-    }
-    console.log(`${members.length} members found:`)
-    console.log(" ")
-
-    for (const m of members) {
-        console.log(m)
+    return {
+        totalMembers: members.length,
+        members: members
     }
 }
 
@@ -52,45 +49,68 @@ const searchMembers = (query) => {
         }
     }
 
-    if (result.length == 0) {
-        console.log("No members found.")
-        return
+    return {
+        totalResults: result.length,
+        result: result
     }
-
-    return result
 }
 
 
 const updateMember = (member) => {
     // check if member exists 
-    let existingmember = -1
+    let existingMember = -1
     for (let i = 0; i < members.length; i++) {
         if (members[i].id == member.id) {
-            existingmember = i
+            existingMember = i
         }
     }
 
-    if (existingmember == -1) {
-        console.log("member does not exist.")
-        return
+    if (existingMember == -1) {
+        return {
+            success: false,
+            error: "Member does not exist."
+        }
     }
 
 
     const isValid = validateMember(member, members)
 
     if (!isValid.valid) {
-        console.log("============= Error =============")
-        console.log(isValid.error)
-        return
+        return {
+            success: false,
+            error: isValid.error
+        }
     }
 
 
-    members[existingmember] = member
+    members[existingMember] = member
 
-    console.log("member editted successfully.")
-    console.log("Editted member:")
-    console.log(members[existingmember])
-    return
+    return {
+        success: true,
+        message: "member successfully editted.",
+        member: members[existingMember]
+    }
+}
+
+const deleteMember = (memberId) => {
+    const member = members.find(m => m.id === memberId)
+    if (!member) {
+        return {
+            success: false,
+            error: "Member does not exist"
+        }
+    }
+    if (member.borrowedBooks.length > 0) {
+        return {
+            success: false,
+            error: "Member has unreturned books."
+        }
+    }
+    members = members.filter(b => b.id !== memberId);
+    return {
+        success: true,
+        message: "Member successfully removed."
+    }
 
 }
 
