@@ -58,12 +58,7 @@ const searchMembers = (query) => {
 
 const updateMember = (member) => {
     // check if member exists 
-    let existingMember = -1
-    for (let i = 0; i < members.length; i++) {
-        if (members[i].id == member.id) {
-            existingMember = i
-        }
-    }
+    let existingMember = members.findIndex(m => m.id === member.id)
 
     if (existingMember == -1) {
         return {
@@ -93,20 +88,20 @@ const updateMember = (member) => {
 }
 
 const deleteMember = (memberId) => {
-    const member = members.find(m => m.id === memberId)
-    if (!member) {
+    const memberIndex = members.findIndex(m => m.id === memberId)
+    if (memberIndex == -1) {
         return {
             success: false,
             error: "Member does not exist"
         }
     }
-    if (member.borrowedBooks.length > 0) {
+    if (members[memberIndex].borrowedBooks.length > 0) {
         return {
             success: false,
             error: "Member has unreturned books."
         }
     }
-    members = members.filter(b => b.id !== memberId);
+    members.splice(memberIndex, 1);
     return {
         success: true,
         message: "Member successfully removed."
@@ -114,4 +109,4 @@ const deleteMember = (memberId) => {
 
 }
 
-export { addMember, viewAllMembers, searchMembers, updateMember }
+export { addMember, viewAllMembers, searchMembers, updateMember, deleteMember }

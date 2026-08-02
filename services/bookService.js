@@ -55,29 +55,20 @@ const searchBooks = (query) => {
 }
 
 const updateBook = (book) => {
-    // check if book exists and isbn is valid
-    let existingBook = -1
-
-    for (let i = 0; i < books.length; i++) {
-        if (books[i].id == book.id) {
-            existingBook = i
-
-            // if field is isbn
-            if (book["isbn"] != books[i].isbn) {
-
-                return {
-                    success: false,
-                    error: "Isbn cannot be changed."
-                }
-            }
-        }
-
-    }
+    const existingBook = books.findIndex(b => b.id === book.id)
 
     if (existingBook == -1) {
         return {
             success: false,
             error: "Book does not exist."
+        }
+    }
+
+    // check if isbn is the same
+    if (book.isbn !== books[existingBook].isbn) {
+        return {
+            success: false,
+            error: "ISBN cannot be changed."
         }
     }
 
@@ -101,20 +92,20 @@ const updateBook = (book) => {
 }
 
 const deleteBook = (bookId) => {
-    const book = books.find(b => b.id === bookId)
-    if (!book) {
+    const bookIndex = books.findIndex(b => b.id === bookId)
+    if (bookIndex == -1) {
         return {
             success: false,
             error: "Book does not exist"
         }
     }
-    if (book.availableCopies != book.totalCopies) {
+    if (books[bookIndex].availableCopies != books[bookIndex].totalCopies) {
         return {
             success: false,
             error: "Some copies have not been returned."
         }
     }
-    books = books.filter(b => b.id !== bookId);
+    books.splice(bookIndex, 1);
     return {
         success: true,
         message: "Book successfully removed."
@@ -122,4 +113,4 @@ const deleteBook = (bookId) => {
 
 }
 
-export { addBook, viewAllBooks, searchBooks, updateBook }
+export { addBook, viewAllBooks, searchBooks, updateBook, deleteBook }
