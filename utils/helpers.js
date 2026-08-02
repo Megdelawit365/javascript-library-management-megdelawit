@@ -27,4 +27,5 @@ const generateId = (data) => {
     return id
 }
 
+
 export { isEmpty, generateId }
