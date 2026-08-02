@@ -80,17 +80,19 @@ const validateMember = (member, members) => {
         }
     }
 
+    const memberId = member.id ? member.id : -1
+
     for (const m of members) {
-        if (m.email.toLowerCase() === member.email.toLowerCase()) {
+        if (m.email.toLowerCase() === member.email.toLowerCase() && memberId != m.id) {
             return {
                 valid: false,
-                error: `Failed to add member. Email already exists.`
+                error: `Email already exists.`
             }
         }
-        if (m.phone === member.phone) {
+        if (m.phone === member.phone && memberId != m.id) {
             return {
                 valid: false,
-                error: `Failed to add member. Phone number already exists.`
+                error: `Phone number already exists.`
             }
         }
     }
