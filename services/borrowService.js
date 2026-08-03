@@ -1,9 +1,9 @@
-import { searchBooks } from "./bookService"
-import { searchMembers } from "./memberService"
+import { searchBooks } from "./bookService.js"
+import { searchMembers } from "./memberService.js"
 import { books } from '../data/books.js'
 import { members } from '../data/members.js'
 import { borrows } from "../data/borrows.js"
-import { generateId } from "../utils/helpers"
+import { generateId } from "../utils/helpers.js"
 
 
 const borrowBook = (memberId, bookId) => {
@@ -19,8 +19,8 @@ const borrowBook = (memberId, bookId) => {
             error: "Book does not exist"
         }
     }
-    const memberIndex = findIndex(m => m.id = member.id)
-    const bookIndex = findIndex(b => b.id = book.id)
+    const memberIndex = members.findIndex(m => m.id === memberId)
+    const bookIndex = books.findIndex(b => b.id === bookId)
 
     if (books[bookIndex].availableCopies == 0) {
         return {
@@ -28,7 +28,7 @@ const borrowBook = (memberId, bookId) => {
             error: "Book is not available"
         }
     }
-    if (bookId in member.borrowedBooks) {
+    if (members[memberIndex].borrowedBooks.includes(bookId)) {
         return {
             success: false,
             error: "Member has already borrowed this book."
@@ -36,13 +36,13 @@ const borrowBook = (memberId, bookId) => {
 
     }
 
-    books[book].availableCopies -= 1
-    members[member].borrowedBooks.push(book.isbn)
+    books[bookIndex].availableCopies -= 1
+    members[memberIndex].borrowedBooks.push(bookId)
     borrows.push({
         id: generateId(borrows),
         memberId: memberId,
         bookId: bookId,
-        borrowDate: new Date(now),
+        borrowDate: new Date(),
         returned: false
     })
 
@@ -54,7 +54,7 @@ const borrowBook = (memberId, bookId) => {
 
 }
 
-const returnBook = (memberId, bookId, books, members) => {
+const returnBook = (memberId, bookId) => {
     if (searchMembers({ "id": memberId }).totalResults === 0) {
         return {
             success: false,
@@ -67,10 +67,10 @@ const returnBook = (memberId, bookId, books, members) => {
             error: "Book does not exist"
         }
     }
-    const memberIndex = findIndex(m => m.id = member.id)
-    const bookIndex = findIndex(b => b.id = book.id)
+    const memberIndex = members.findIndex(m => m.id === memberId)
+    const bookIndex = books.findIndex(b => b.id === bookId)
 
-    if (!(bookId in member.borrowedBooks)) {
+    if (!members[memberIndex].borrowedBooks.includes(bookId)) {
         return {
             success: false,
             error: "Member has not borrowed book."
@@ -78,7 +78,7 @@ const returnBook = (memberId, bookId, books, members) => {
     }
 
     books[bookIndex].availableCopies += 1
-    members[memberIndex].borrowedBooks = members[member].borrowedBooks.filter(m => m !== bookId)
+    members[memberIndex].borrowedBooks = members[memberIndex].borrowedBooks.filter(m => m !== bookId)
     const borrowIndex = borrows.findIndex(b => b.memberId == memberId && b.bookId == bookId)
     borrows[borrowIndex].returned = true
 
