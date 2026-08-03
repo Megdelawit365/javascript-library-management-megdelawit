@@ -72,6 +72,7 @@ const validateMember = (member, members) => {
         }
 
         // check if all fields are non empty
+        if (f == "borrowedBooks") continue
         if (isEmpty(member[f])) {
             return {
                 valid: false,
