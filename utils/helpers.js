@@ -27,4 +27,45 @@ const generateId = (data) => {
     return id
 }
 
-export { isEmpty, generateId }
+const displayBook = (bookArray) => {
+    for (const book of bookArray) {
+        console.log("")
+        console.log(`ID:               ${book.id}`)
+        console.log(`Title:            ${book.title}`)
+        console.log(`Author:           ${book.author}`)
+        console.log(`Category:         ${book.category}`)
+        console.log(`Publication Year: ${book.publicationYear}`)
+        console.log(`ISBN:             ${book.isbn}`)
+        console.log(`Total Copies:     ${book.totalCopies}`)
+        console.log(`Available Copies: ${book.availableCopies}`)
+        console.log("")
+    }
+}
+
+const displayMember = (memberArray) => {
+    for (const member of memberArray) {
+        console.log("")
+        console.log(`ID:             ${member.id}`)
+        console.log(`First Name:     ${member.firstName}`)
+        console.log(`Last Name:      ${member.lastName}`)
+        console.log(`Email:          ${member.email}`)
+        console.log(`Phone:          ${member.phone}`)
+        console.log(`Borrowed Books: ${member.borrowedBooks}`)
+        console.log("")
+    }
+}
+
+const displayBorrow = (borrowArray) => {
+    for (const borrow of borrowArray) {
+        console.log("")
+        console.log(`Borrow ID:  ${borrow.id}`)
+        console.log(`Member ID:  ${borrow.memberId}`)
+        console.log(`Book ID:    ${borrow.bookId}`)
+        console.log(`Borrow Date: ${borrow.borrowDate}`)
+        console.log(`Returned:   ${borrow.returned}`)
+        console.log("")
+    }
+}
+
+
+export { isEmpty, generateId, displayBook, displayMember, displayBorrow }
